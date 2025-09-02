@@ -1,12 +1,12 @@
 import { Elysia } from 'elysia'
-import { Forbidden } from '../errors/forbidden'
 import { authPlugin } from './auth'
+import { Forbidden } from '../errors/forbidden'
 
 const order = ['VIEWER', 'MEMBER', 'ANALYST', 'SUPERVISOR', 'ADMIN']
 type Role = (typeof order)[number]
 
-export const requireRole = (role?: Role | Role[]) =>
-  new Elysia({ name: 'require-role' })
+export const requireDataAccess = (role?: Role | Role[]) =>
+  new Elysia({ name: 'require-data-access' })
     .use(authPlugin)
     .onBeforeHandle(({ user }) => {
       if (!user?.role || !user?.sub) {
@@ -22,11 +22,16 @@ export const requireRole = (role?: Role | Role[]) =>
       }
 
       const need = Array.isArray(role) ? role : [role]
-      const userId = order.indexOf(user.role)
-      const response = need.some((r) => userId >= order.indexOf(r))
+      const userRoleIndex = order.indexOf(user.role)
+      const hasPermission = need.some((r) => userRoleIndex >= order.indexOf(r))
 
-      if (!response) {
+      if (!hasPermission) {
         throw new Forbidden('Insufficient role')
       }
     })
+    .derive(({ user }) => ({
+      isAdmin: user?.role === 'ADMIN',
+      currentUserId: user?.sub,
+      userRole: user?.role
+    }))
     .as('scoped')

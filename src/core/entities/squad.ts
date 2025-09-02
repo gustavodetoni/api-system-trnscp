@@ -3,4 +3,7 @@ export type Squad = {
   name: string
   description: string
   language: string
+  createdAt: Date
+  updatedAt: Date
+  deletedAt: Date
 }

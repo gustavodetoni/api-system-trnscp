@@ -1,54 +1,76 @@
 import { Elysia, t } from 'elysia'
-import { authPlugin } from '../../shared/auth/auth'
+import { z } from 'zod'
+import { jwt } from '@elysiajs/jwt'
 import { registerUser } from '../../core/use-cases/auth/register-user'
 import { loginUser } from '../../core/use-cases/auth/login-user'
 
-export const authRoutes = new Elysia()
-  .use(authPlugin)
+export const authRoutes = new Elysia({ name: 'routes:auth', prefix: '/auth' })
+  .use(jwt({ name: 'jwt', secret: process.env.JWT_SECRET! }))
   .post(
     '/register',
-    async ({ body, jwt }) => {
-      const created = await registerUser(body)
-      const token = await jwt.sign({
-        sub: created.id,
-        role: created.role,
-        plan: created.plan,
+    async ({ body }) => {
+      const data = z
+        .object({
+          name: z.string().min(2),
+          email: z.string().email(),
+          password: z.string().min(6),
+          role: z
+            .enum(['VIEWER', 'MEMBER', 'ANALYST', 'SUPERVISOR', 'ADMIN'])
+            .optional(),
+        })
+        .parse(body)
+
+      const created = await registerUser({
+        name: data.name,
+        email: data.email,
+        password: data.password,
       })
-      return { token }
+
+      return created
     },
     {
-      detail: {
-        tags: ['Auth'],
-        summary: 'Register a new user',
-      },
+      detail: { tags: ['Auth'] },
       body: t.Object({
         name: t.String(),
-        email: t.String({ format: 'email' }),
-        password: t.String({ minLength: 6 }),
+        email: t.String(),
+        password: t.String(),
       }),
-      response: t.Object({ token: t.String() }),
     }
   )
   .post(
     '/login',
-    async ({ body, jwt }) => {
-      const user = await loginUser(body)
-      const token = await jwt.sign({
-        sub: user.id,
-        role: user.role,
-        plan: user.plan,
+    async ({ body, jwt, cookie }) => {
+      const creds = z
+        .object({
+          email: z.string().email(),
+          password: z.string().min(6),
+        })
+        .parse(body)
+
+      const user = await loginUser({
+        email: creds.email,
+        password: creds.password,
       })
-      return { token }
+
+      const token = await jwt.sign({ sub: user.id, role: user.role })
+
+      cookie.auth.set({
+        httpOnly: true,
+        value: token,
+        path: '/',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7,
+      })
+
+      return {
+        accessToken: token,
+      }
     },
     {
-      detail: {
-        tags: ['Auth'],
-        summary: 'Login',
-      },
+      detail: { tags: ['Auth'] },
       body: t.Object({
-        email: t.String({ format: 'email' }),
+        email: t.String(),
         password: t.String(),
       }),
-      response: t.Object({ token: t.String() }),
     }
   )
