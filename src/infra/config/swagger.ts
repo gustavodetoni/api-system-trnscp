@@ -14,6 +14,7 @@ export const SwaggerConfig = new Elysia({ name: 'swagger' }).use(
           name: 'Transcription',
           description: 'Upload de arquivos para transcrição',
         },
+        { name: 'Categories', description: 'CRUD de Categorias' },
       ],
       components: {
         securitySchemes: {
