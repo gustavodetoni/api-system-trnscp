@@ -4,13 +4,14 @@ import { Conflict } from '../../../shared/errors/conflict'
 
 type CreateCategoryRequest = {
   name: string
+  description?: string
   squadId: string
 }
 
 export class CreateCategoryUseCase {
   constructor(private categoryRepository: CategoryRepository) {}
 
-  async execute({ name, squadId }: CreateCategoryRequest): Promise<Category> {
+  async execute({ name, description, squadId }: CreateCategoryRequest): Promise<Category> {
     const existingCategory = await this.categoryRepository.findByNameAndSquadId(
       name,
       squadId
@@ -22,6 +23,7 @@ export class CreateCategoryUseCase {
 
     const category = await this.categoryRepository.create({
       name,
+      description,
       squadId,
     })
 

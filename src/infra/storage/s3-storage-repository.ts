@@ -27,7 +27,7 @@ export class S3StorageRepository implements StorageRepository {
       })
     )
 
-    const url = `https://${bucketName}.s3.amazonaws.com/${fileName}`
+    const url = `s3://${bucketName}/${fileName}`
 
     return { url }
   }

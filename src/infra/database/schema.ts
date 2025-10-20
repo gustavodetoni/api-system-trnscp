@@ -75,6 +75,7 @@ export const userSquads = pgTable(
 export const categories = pgTable('Category', {
   id: uuid('id').defaultRandom().primaryKey(),
   name: text('name').notNull(),
+  description: text('description'),
   squadId: uuid('squadId').notNull(),
   createdAt: timestamp('createdAt', { withTimezone: false })
     .defaultNow()

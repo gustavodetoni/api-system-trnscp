@@ -43,6 +43,7 @@ export const categoryRoutes = new Elysia({
           detail: { tags: ['Categories'] },
           body: t.Object({
             name: t.String(),
+            description: t.Optional(t.String()),
             squadId: t.String(),
           }),
         }
@@ -55,7 +56,7 @@ export const categoryRoutes = new Elysia({
           )
           return await updateCategoryUseCase.execute({
             id: params.id,
-            name: body.name,
+            ...body,
           })
         },
         {
@@ -63,6 +64,7 @@ export const categoryRoutes = new Elysia({
           params: t.Object({ id: t.String() }),
           body: t.Object({
             name: t.String(),
+            description: t.Optional(t.String()),
           }),
         }
       )

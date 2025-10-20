@@ -69,13 +69,21 @@ export class UploadFileUseCase {
         throw new Error('AWS_SQS_QUEUE_URL is not set')
       }
 
+      if (!process.env.TOKEN_WHISPER) {
+        throw new Error('TOKEN_WHISPER is not set')
+      }
+
       const message = {
         userId,
         squadId,
         audioUrl: upload.url,
         language: squad.language,
         transcriptionId: transcription.id,
-        categories: categories.map((category) => category.name),
+        categories: categories.map((category) => ({
+          category: category.name,
+          description: category.description,
+        })),
+        token: process.env.TOKEN_WHISPER,
       }
 
       await this.queueRepository.sendMessage({
