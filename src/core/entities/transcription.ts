@@ -1,8 +1,11 @@
 export type Transcription = {
   id: string
+  title: string
   name: string
   keywords: string[]
+  resume: string
   duration: number
   squadId: string
-  categoryId: string
+  category: string
+  pinned: boolean
 }

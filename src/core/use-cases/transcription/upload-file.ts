@@ -4,6 +4,7 @@ import { StorageRepository } from '../../repositories/storage-repository'
 import { QueueRepository } from '../../repositories/queue-repository'
 import { CategoryRepository } from '../../repositories/category-repository'
 import { NotFound } from '../../../shared/errors/not-found'
+import { TranscriptionRepository } from '../../repositories/transcription-repository'
 
 type UploadFileRequest = {
   userId: string
@@ -25,7 +26,8 @@ export class UploadFileUseCase {
     private squadRepository: SquadRepository,
     private categoryRepository: CategoryRepository,
     private storageRepository: StorageRepository,
-    private queueRepository: QueueRepository
+    private queueRepository: QueueRepository,
+    private transcriptionRepository: TranscriptionRepository
   ) {}
 
   async execute({
@@ -56,6 +58,11 @@ export class UploadFileUseCase {
         throw new Error('Failed to upload file to bucket')
       }
 
+      const transcription = await this.transcriptionRepository.create({
+        name: file.name,
+        squadId,
+      })
+
       const categories = await this.categoryRepository.findBySquadId(squadId)
 
       if (!process.env.AWS_SQS_QUEUE_URL) {
@@ -67,6 +74,7 @@ export class UploadFileUseCase {
         squadId,
         audioUrl: upload.url,
         language: squad.language,
+        transcriptionId: transcription.id,
         categories: categories.map((category) => category.name),
       }
 

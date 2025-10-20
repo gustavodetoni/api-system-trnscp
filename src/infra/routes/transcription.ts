@@ -1,16 +1,19 @@
 import { Elysia, t } from 'elysia'
 import { requireDataAccess } from '../../shared/auth/require-data-access'
-import { UploadFileUseCase } from '../../core/use-cases/transcription/upload-file-use-case'
+import { UploadFileUseCase } from '../../core/use-cases/transcription/upload-file'
 import { DrizzleSquadRepository } from '../repositories/squad-repository'
 import { DrizzleCategoryRepository } from '../repositories/category-repository'
 import { S3StorageRepository } from '../storage/s3-storage-repository'
 import { SQSQueueRepository } from '../queue/sqs-queue-repository'
 import { Unauthorized } from '../../shared/errors/unauthorized'
 
+import { DrizzleTranscriptionRepository } from '../repositories/transcription-repository'
+
 const squadRepository = new DrizzleSquadRepository()
 const categoryRepository = new DrizzleCategoryRepository()
 const storageRepository = new S3StorageRepository()
 const queueRepository = new SQSQueueRepository()
+const transcriptionRepository = new DrizzleTranscriptionRepository()
 
 export const transcriptionRoutes = new Elysia({
   name: 'routes:transcription',
@@ -27,7 +30,8 @@ export const transcriptionRoutes = new Elysia({
         squadRepository,
         categoryRepository,
         storageRepository,
-        queueRepository
+        queueRepository,
+        transcriptionRepository
       )
 
       const { squadId } = params

@@ -4,8 +4,6 @@ import {
   text,
   timestamp,
   pgEnum,
-  varchar,
-  index,
   unique,
   integer,
   boolean,
@@ -91,11 +89,14 @@ export const categories = pgTable('Category', {
 
 export const transcriptions = pgTable('Transcription', {
   id: uuid('id').defaultRandom().primaryKey(),
+  title: text('title'),
   name: text('name').notNull(),
-  keywords: text('keywords').array().notNull(),
   duration: integer('duration'),
   squadId: uuid('squadId').notNull(),
-  categoryId: uuid('categoryId').notNull(),
+  category: text('category'),
+  keywords: text('keywords').array(),
+  resume: text('resume'),
+  pinned: boolean('pinned').default(false).notNull(),
   createdAt: timestamp('createdAt', { withTimezone: false })
     .defaultNow()
     .notNull(),
