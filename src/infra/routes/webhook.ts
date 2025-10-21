@@ -19,7 +19,14 @@ export const webhookRoutes = new Elysia({
     const updateUseCase = new UpdateTranscriptionDetailsUseCase(
       transcriptionRepository
     )
-    const result = await updateUseCase.execute(body)
+
+    const processedBody = {
+      ...body,
+      duration: Math.floor(body.duration),
+      keywords: Array.isArray(body.keywords) ? body.keywords : undefined,
+    }
+
+    const result = await updateUseCase.execute(processedBody)
 
     return { ok: true, updatedId: result.id }
   },
@@ -34,8 +41,8 @@ export const webhookRoutes = new Elysia({
       duration: t.Number(),
       squadId: t.String(),
       category: t.String(),
-      keywords: t.Array(t.String()),
-      resume: t.String(),
+      keywords: t.Optional(t.Array(t.String())),
+      resume: t.Optional(t.String()),
     }),
   }
 )

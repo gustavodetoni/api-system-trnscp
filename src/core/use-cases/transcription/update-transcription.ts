@@ -4,11 +4,11 @@ import { NotFound } from '../../../shared/errors/not-found'
 
 type UpdateTranscriptionDetailsRequest = {
   transcriptionId: string
-  title: string
-  duration: number
-  category: string
-  keywords: string[]
-  resume: string
+  title?: string
+  duration?: number
+  category?: string
+  keywords?: string[]
+  resume?: string
 }
 
 export class UpdateTranscriptionDetailsUseCase {
