@@ -22,7 +22,7 @@ export const webhookRoutes = new Elysia({
 
     const processedBody = {
       ...body,
-      duration: Math.floor(body.duration),
+      duration: Math.floor(body.duration || 0),
       keywords: Array.isArray(body.keywords) ? body.keywords : undefined,
     }
 
@@ -37,10 +37,10 @@ export const webhookRoutes = new Elysia({
     }),
     body: t.Object({
       transcriptionId: t.String(),
-      title: t.String(),
-      duration: t.Number(),
+      title: t.Optional(t.String()),
+      duration: t.Optional(t.Number()),
       squadId: t.Optional(t.String()),
-      category: t.String(),
+      category: t.Optional(t.String()),
       status: t.Optional(
         t.Union([
           t.Literal('ERROR'),
