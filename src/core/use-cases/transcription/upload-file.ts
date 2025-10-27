@@ -61,6 +61,7 @@ export class UploadFileUseCase {
       const transcription = await this.transcriptionRepository.create({
         name: file.name,
         squadId,
+        status: 'UPLOADING',
       })
 
       const categories = await this.categoryRepository.findBySquadId(squadId)
@@ -79,6 +80,7 @@ export class UploadFileUseCase {
         audioUrl: upload.url,
         language: squad.language,
         transcriptionId: transcription.id,
+        status: transcription.status,
         categories: categories.map((category) => ({
           category: category.name,
           description: category.description,

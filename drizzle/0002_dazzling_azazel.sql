@@ -1,0 +1,2 @@
+CREATE TYPE "public"."TranscriptionStatus" AS ENUM('ERROR', 'UPLOADING', 'TRANSCRIBING', 'CATEGORIZING', 'COMPLETED');--> statement-breakpoint
+ALTER TABLE "Transcription" ADD COLUMN "status" "TranscriptionStatus";

@@ -1,11 +1,18 @@
 export type Transcription = {
   id: string
-  title: string
+  title: string | null
   name: string
-  keywords: string[]
-  resume: string
-  duration: number
+  keywords: string[] | null
+  resume: string | null
+  duration: number | null
   squadId: string
-  category: string
+  category: string | null
+  status: |
+    'ERROR' |
+    'UPLOADING' |
+    'TRANSCRIBING' |
+    'CATEGORIZING' |
+    'COMPLETED' |
+    null
   pinned: boolean
 }

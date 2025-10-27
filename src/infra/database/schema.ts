@@ -88,6 +88,14 @@ export const categories = pgTable('Category', {
   isDeleted: boolean('is_deleted').default(false),
 })
 
+export const transcriptionStatusEnum = pgEnum('TranscriptionStatus', [
+  'ERROR',
+  'UPLOADING',
+  'TRANSCRIBING',
+  'CATEGORIZING',
+  'COMPLETED',
+])
+
 export const transcriptions = pgTable('Transcription', {
   id: uuid('id').defaultRandom().primaryKey(),
   title: text('title'),
@@ -95,6 +103,7 @@ export const transcriptions = pgTable('Transcription', {
   duration: integer('duration'),
   squadId: uuid('squadId').notNull(),
   category: text('category'),
+  status: transcriptionStatusEnum('status'),
   keywords: text('keywords').array(),
   resume: text('resume'),
   pinned: boolean('pinned').default(false).notNull(),

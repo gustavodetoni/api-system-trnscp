@@ -15,6 +15,13 @@
       "when": 1760922693514,
       "tag": "0001_conscious_quasar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1761356440744,
+      "tag": "0002_dazzling_azazel",
+      "breakpoints": true
     }
   ]
 }

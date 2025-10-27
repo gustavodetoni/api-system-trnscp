@@ -13,7 +13,7 @@ export class DrizzleTranscriptionRepository implements TranscriptionRepository {
   async create(
     data: Omit<
       Transcription,
-      'id' | 'keywords' | 'resume' | 'duration' | 'category' | 'pinned'
+      'id' | 'keywords' | 'resume' | 'duration' | 'category' | 'pinned' | 'title'
     >
   ): Promise<Transcription> {
     const [created] = await db.insert(transcriptions).values(data).returning()

@@ -39,8 +39,17 @@ export const webhookRoutes = new Elysia({
       transcriptionId: t.String(),
       title: t.String(),
       duration: t.Number(),
-      squadId: t.String(),
+      squadId: t.Optional(t.String()),
       category: t.String(),
+      status: t.Optional(
+        t.Union([
+          t.Literal('ERROR'),
+          t.Literal('UPLOADING'),
+          t.Literal('TRANSCRIBING'),
+          t.Literal('CATEGORIZING'),
+          t.Literal('COMPLETED'),
+        ])
+      ),
       keywords: t.Optional(t.Array(t.String())),
       resume: t.Optional(t.String()),
     }),

@@ -7,6 +7,7 @@ type UpdateTranscriptionDetailsRequest = {
   title?: string
   duration?: number
   category?: string
+  status?: 'ERROR' | 'UPLOADING' | 'TRANSCRIBING' | 'CATEGORIZING' | 'COMPLETED'
   keywords?: string[]
   resume?: string
 }

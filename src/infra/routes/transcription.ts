@@ -141,11 +141,20 @@ export const transcriptionRoutes = new Elysia({
         transcriptionId: t.String(),
       }),
       body: t.Object({
-        title: t.String(),
-        duration: t.Number(),
-        category: t.String(),
-        keywords: t.Array(t.String()),
-        resume: t.String(),
+        title: t.Optional(t.String()),
+        duration: t.Optional(t.Number()),
+        category: t.Optional(t.String()),
+        status: t.Optional(
+          t.Union([
+            t.Literal('ERROR'),
+            t.Literal('UPLOADING'),
+            t.Literal('TRANSCRIBING'),
+            t.Literal('CATEGORIZING'),
+            t.Literal('COMPLETED'),
+          ])
+        ),
+        keywords: t.Optional(t.Array(t.String())),
+        resume: t.Optional(t.String()),
       }),
     }
   )
